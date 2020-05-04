@@ -1,4 +1,4 @@
-const express =require('express');
+const express = require('express');
 const route = express.Router();
 const mysql = require('mysql')
 
@@ -7,11 +7,11 @@ const mysql = require('mysql')
 const conn = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'abdilah',
-    database: 'supermarket'
+    password: '',
+    database: 'db'
 });
 
-conn.connect(function (error) {
+conn.connect(function(error) {
     if (!!error) console.log(error);
     else console.log('Connected! :)')
 });
@@ -22,12 +22,12 @@ conn.connect(function (error) {
 
 
 
-       // -------------------------------------------Dashboard-------------------------------
+// -------------------------------------------Dashboard-------------------------------
 
 
 
-  route.get('/', (req, res) => {
- const sql = "SELECT produit_id,produit_name,prix,Quantité,Frs_name,Tel,Rayon_name FROM  ((produits INNER JOIN fournisseurs ON produits.Frs_id = fournisseurs.Frs_id) INNER JOIN rayons ON produits.Rayon_id = rayons.Rayon_id)";
+route.get('/', (req, res) => {
+    const sql = "SELECT produit_id,produit_name,prix,Quantité,Frs_name,Tel,Rayon_name FROM  ((produits INNER JOIN fournisseurs ON produits.Frs_id = fournisseurs.Frs_id) INNER JOIN rayons ON produits.Rayon_id = rayons.Rayon_id)";
     const query = conn.query(sql, (err, rows) => {
         if (err) throw err;
         res.render('dashboard', {
@@ -49,10 +49,10 @@ route.get('/produc', (req, res, next) => {
     const query = conn.query(sql, (err, rows) => {
         if (err) throw err;
 
-          
-           res.json(rows);
-       
-         
+
+        res.json(rows);
+
+
     })
 })
 
@@ -71,14 +71,14 @@ route.get('/product', (req, res, next) => {
         res.render('products', {
             prods: rows
         });
-         
+
     })
 })
 
-     // ------------------------------------- Caissier -------------------------------
+// ------------------------------------- Caissier -------------------------------
 
-  route.get('/caisse', (req, res) => {
-     const sql = "SELECT * FROM produits";
+route.get('/caisse', (req, res) => {
+    const sql = "SELECT * FROM produits";
     const query = conn.query(sql, (err, rows) => {
         if (err) throw err;
         res.render('caissier', {
@@ -87,10 +87,10 @@ route.get('/product', (req, res, next) => {
 
     })
 });
-    route.post('/caisse', (req, res) => {
-     
-     console.log(req.body)
-     let proId = req.body.produit_id
+route.post('/caisse', (req, res) => {
+
+    console.log(req.body)
+    let proId = req.body.produit_id
 
     let sql = "Update produits SET Quantité= Quantité -'" + req.body.Quantité + "' where produit_id =" + proId;
     let query = conn.query(sql, (err, results) => {
@@ -108,36 +108,36 @@ route.get('/product', (req, res, next) => {
 
 // --------------------------------------add products----------------------------------------
 route.get('/add', (req, res) => {
-    
+
 
     const sql = "SELECT * FROM fournisseurs";
     const sqll = "SELECT * FROM rayons";
     const query = conn.query(sql, (err, rows) => {
-    	const query = conn.query(sqll, (err, rows2) => {
-        if (err) throw err;
-        res.render('addPage', {
-            frs: rows,
-            ray: rows2,
+        const query = conn.query(sqll, (err, rows2) => {
+            if (err) throw err;
+            res.render('addPage', {
+                frs: rows,
+                ray: rows2,
+            });
         });
-          });
     })
-      
+
 
 });
 
 route.post('/save', (req, res) => {
-	console.log(req.body)
+    console.log(req.body)
 
-     const a = parseInt(req.body.prix);  
-     const b = parseInt(req.body.Quantité);
-     const pr=a*b;
- 
+    const a = parseInt(req.body.prix);
+    const b = parseInt(req.body.Quantité);
+    const pr = a * b;
+
     const data = {
         produit_name: req.body.produit_name,
         prix: pr,
         Quantité: req.body.Quantité,
-        Frs_id:req.body.Frs_id,
-        Rayon_id:req.body.Rayon_id,
+        Frs_id: req.body.Frs_id,
+        Rayon_id: req.body.Rayon_id,
 
     };
     const sql = "INSERT INTO produits SET ?";
@@ -205,8 +205,8 @@ route.get('/rayon', (req, res, next) => {
 
 
 route.get('/addRayon', (req, res) => {
-        res.render('addRayon');
-       
+    res.render('addRayon');
+
 });
 
 
@@ -242,7 +242,7 @@ route.post('/updatery', (req, res) => {
 
     let ryId = req.body.Rayon_id
 
-    let sql = "Update rayons SET  Rayon_name='" + req.body.Rayon_name  + "' where Rayon_id =" + ryId;
+    let sql = "Update rayons SET  Rayon_name='" + req.body.Rayon_name + "' where Rayon_id =" + ryId;
     let query = conn.query(sql, (err, results) => {
         if (err) throw err;
         res.redirect('/rayon');
@@ -296,23 +296,23 @@ route.get('/fournisseur', (req, res, next) => {
 
 route.get('/addFournisseur', (req, res) => {
     res.render('addFournisseur');
-   
+
 });
 route.post('/savefr', (req, res) => {
 
-const data = {
-    Frs_name: req.body.Frs_name,
-    Société: req.body.Société,
-    Address: req.body.Address,
-    Tel: req.body.Tel,
-    Email: req.body.Email
+    const data = {
+        Frs_name: req.body.Frs_name,
+        Société: req.body.Société,
+        Address: req.body.Address,
+        Tel: req.body.Tel,
+        Email: req.body.Email
 
-};
-const sql = "INSERT INTO fournisseurs SET ?";
-const query = conn.query(sql, data, (err, results) => {
-    if (err) throw err;
-    res.redirect('/addFournisseur');
-});
+    };
+    const sql = "INSERT INTO fournisseurs SET ?";
+    const query = conn.query(sql, data, (err, results) => {
+        if (err) throw err;
+        res.redirect('/fournisseur');
+    });
 });
 
 
@@ -334,7 +334,7 @@ route.post('/updatefr', (req, res) => {
 
     let frId = req.body.Frs_id
 
-    let sql = "Update fournisseurs SET  Frs_name='" + req.body.Frs_name +"' , Société = '" + req.body.Société +"' , Address='" + req.body.Address + "', Tel='" + req.body.Tel + "', Email='" + req.body.Email + "'  where Frs_id ="+ frId;
+    let sql = "Update fournisseurs SET  Frs_name='" + req.body.Frs_name + "' , Société = '" + req.body.Société + "' , Address='" + req.body.Address + "', Tel='" + req.body.Tel + "', Email='" + req.body.Email + "'  where Frs_id =" + frId;
     let query = conn.query(sql, (err, results) => {
         if (err) throw err;
         res.redirect('/fournisseur');
