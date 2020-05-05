@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Products</title>
+    <title>home</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -11,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 
     <link rel="stylesheet" href="/style2.css">
 </head>
@@ -22,8 +22,8 @@
 
 
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap justify-content-center shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/"></i> Inventory management
-        </a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Inventory
+      Management</a>
 
 
     </nav>
@@ -34,12 +34,12 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/">
+                            <a class="nav-link active" href="#">
                                 <span data-feather="home"></span> home <span class="sr-only">(current)</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="/product">
                 Products
               </a>
                         </li>
@@ -55,7 +55,6 @@
               </a>
                         </li>
 
-
                     </ul>
 
 
@@ -65,28 +64,21 @@
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h2>Welcome To Our Products</h2>
+                    <h2>home</h2>
                 </div>
 
                 <div class="container">
                     <div class="row">
-                        <div class="col-12 col-md-12 col-xl-3 d-flex justify-content-start align-items-center">
-                            <h1 style="font-size: 30px">Products</h1>
+                        <div class="col-12 col-md-12 col-xl-6 d-flex justify-content-start align-items-center">
+                            <h1>My Data</h1>
                         </div>
 
-                        <div class="col-12 col-md-12 col-xl-3">
-                            <div class="button d-flex justify-content-center">
-                                <a href="/add"><span>Add + </span></a>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <br>
                 <br>
-
-
-
-
+                <br>
 
 
 
@@ -101,30 +93,37 @@
                             <th scope="col" style="color: rgb(0, 0, 0)">produit</th>
                             <th scope="col" style="color: rgb(0, 0, 0)">prix</th>
                             <th scope="col" style="color: rgb(0, 0, 0)">quantité</th>
-                            <th scope="col" style="width: 219px;color: rgb(0, 0, 0)">Options</th>
+                            <th scope="col" style="color: rgb(0, 0, 0)">Frs</th>
+                            <th scope="col" style="color: rgb(0, 0, 0)">Tel</th>
+                            <th scope="col" style="color: rgb(0, 0, 0)">Rayons</th>
+
                         </tr>
                     </thead>
 
                     <tbody>
-                        <% for(prod of prods){%>
+                        <% for(grp of ALL){%>
                             <tr>
                                 <th scope="row">
-                                    <%= prod.produit_id%>
+                                    <%=grp.produit_id%>
                                 </th>
                                 <td>
-                                    <%=prod.produit_name%>
+                                    <%=grp.produit_name%>
                                 </td>
                                 <td>
-                                    <%=prod.prix%> Dhs</td>
+                                    <%=grp.prix%> Dhs</td>
                                 <td>
-                                    <%=prod.Quantité%>
+                                    <%=grp.Quantité%>
                                 </td>
                                 <td>
+                                    <%=grp.Frs_name%>
+                                </td>
+                                <td>+212
+                                    <%=grp.Tel%>
+                                </td>
+                                <td>
+                                    <%=grp.Rayon_name%>
+                                </td>
 
-                                    <a href="edit/<%= prod.produit_id %>" class="btn btn-success">Update * </a>
-                                    <a href="delete/<%= prod.produit_id %>" class="btn btn-danger">DELETE - </a>
-
-                                </td>
                             </tr>
 
                     </tbody>
@@ -136,9 +135,143 @@
     </div>
 
 
-
-
     <script>
+        let ajax = new XMLHttpRequest();
+        ajax.open("GET", "http://127.0.0.1:1000/produc", true);
+
+        ajax.onload = function() {
+            console.log(this.responseText);
+            let data = JSON.parse(this.responseText);
+            console.log(data);
+            name(data);
+
+
+
+        };
+
+        ajax.send();
+
+
+        function name(xdata) {
+
+
+            let labels = xdata.map(e => e.produit_name);
+            console.log(labels)
+            let data = xdata.map(e => e.Quantité);
+            let prix = xdata.map(e => e.prix);
+            console.log(labels)
+
+
+            let ctx = document.getElementById('Chart');
+            let myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+
+
+                    labels: labels,
+                    datasets: [{
+                            label: '# Quantité',
+                            data: data,
+                            backgroundColor: [
+                                'orange',
+                                'orange',
+                                'orange',
+                                'orange',
+                                'orange',
+                                'orange',
+                                'orange'
+                            ],
+                            borderColor: [
+                                'orabge'
+
+                            ],
+                            borderWidth: 1
+                        }, {
+
+                            label: '# prix',
+                            data: prix,
+                            backgroundColor: [
+                                'black',
+                                'black',
+                                'black',
+                                'black',
+                                'black',
+                                'black'
+
+
+                            ],
+                            borderColor: [
+                                'balck'
+
+                            ],
+                            borderWidth: 1
+                        }
+
+
+
+                    ]
+
+
+
+
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         function myFunction() {
             // Declare variables
             var input, filter, table, tr, td, i, txtValue;

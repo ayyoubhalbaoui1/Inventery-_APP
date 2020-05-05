@@ -22,7 +22,7 @@ conn.connect(function(error) {
 
 
 
-// -------------------------------------------Dashboard-------------------------------
+// -------------------------------------------Home-------------------------------
 
 
 
@@ -30,7 +30,7 @@ route.get('/', (req, res) => {
     const sql = "SELECT produit_id,produit_name,prix,Quantité,Frs_name,Tel,Rayon_name FROM  ((produits INNER JOIN fournisseurs ON produits.Frs_id = fournisseurs.Frs_id) INNER JOIN rayons ON produits.Rayon_id = rayons.Rayon_id)";
     const query = conn.query(sql, (err, rows) => {
         if (err) throw err;
-        res.render('dashboard', {
+        res.render('home', {
             ALL: rows
         });
 
