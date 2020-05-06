@@ -14,4 +14,4 @@
 
 6-Run node db.js
 
-7- go to this link http://localhost:1000/  
+7- go to this link http://localhost:2000/  

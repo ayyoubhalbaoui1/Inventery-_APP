@@ -75,30 +75,7 @@ route.get('/product', (req, res, next) => {
     })
 })
 
-// ------------------------------------- Caissier -------------------------------
 
-route.get('/caisse', (req, res) => {
-    const sql = "SELECT * FROM produits";
-    const query = conn.query(sql, (err, rows) => {
-        if (err) throw err;
-        res.render('caissier', {
-            prods: rows
-        });
-
-    })
-});
-route.post('/caisse', (req, res) => {
-
-    console.log(req.body)
-    let proId = req.body.produit_id
-
-    let sql = "Update produits SET Quantité= Quantité -'" + req.body.Quantité + "' where produit_id =" + proId;
-    let query = conn.query(sql, (err, results) => {
-        if (err) throw err;
-        res.redirect('/caisse');
-    });
-
-});
 
 
 
@@ -147,7 +124,7 @@ route.post('/save', (req, res) => {
     });
 });
 
-//--------------------------------------Edit products ------------------------------------
+//--------------------------------------Update products ------------------------------------
 route.get('/edit/:proId', (req, res) => {
     const proId = req.params.proId;
     let sql = `Select * from produits where produit_id = ${proId}`;
@@ -226,7 +203,7 @@ route.post('/savery', (req, res) => {
 });
 
 
-//--------------------------------------Edit products ------------------------------------
+//--------------------------------------Update products ------------------------------------
 route.get('/editry/:ryId', (req, res) => {
     const ryId = req.params.ryId;
     let sql = `Select * from rayons where Rayon_id = ${ryId}`;
@@ -276,7 +253,7 @@ route.get('/deletery/:ryId', (req, res) => {
 
 
 
-//-----------------------------------------------Display all suppliers------------------------------------------
+//-----------------------------------------------Display all Providers------------------------------------------
 
 
 
@@ -292,7 +269,7 @@ route.get('/fournisseur', (req, res, next) => {
     });
 });
 
-//-----------------------------------------------  Add suppliers------------------------------------------
+//-----------------------------------------------  Add Providers------------------------------------------
 
 route.get('/addFournisseur', (req, res) => {
     res.render('addFournisseur');
@@ -318,7 +295,7 @@ route.post('/savefr', (req, res) => {
 
 
 
-//--------------------------------------Edit FRS ------------------------------------
+//--------------------------------------Update Providers ------------------------------------
 route.get('/editfr/:frId', (req, res) => {
     const frId = req.params.frId;
     let sql = `Select * from fournisseurs where Frs_id = ${frId}`;
@@ -341,7 +318,7 @@ route.post('/updatefr', (req, res) => {
     });
 });
 
-//-----------------------------------------------Delete FRS------------------------------------------
+//-----------------------------------------------Delete Providers------------------------------------------
 route.get('/deletery/:frId', (req, res) => {
     const frId = req.params.frId;
     let sql = `DELETE from fournisseurs where Frs_id = ${ryId}`;
